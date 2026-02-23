@@ -4,15 +4,15 @@
 
 
 ``
-run indexer
+indexer run
 ``
 
 ``
-run indexer index_name
+indexer run index_name
 ``
 
 ``
-show indexer status
+indexer status
 ``
 
 
