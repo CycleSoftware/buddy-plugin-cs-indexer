@@ -39,22 +39,73 @@ final class Handler extends BaseHandler
 	public function run(Runtime $runtime): Task
 	{
 		$taskFn = static function (): TaskResult {
-			return TaskResult::withRow(
-				[
-					'index' => 'rt_type_foo',
-					'is_running' => 0,
-					'result' => $this->payload->path,
-				]
-			)->column(
-				'index',
-				Column::String,
-			)->column(
-				'is_running',
-				Column::Long,
-			)->column(
-				'result',
-				Column::String,
-			);
+
+			// "run indexer index_name"
+			// "run indexer"
+			if (str_starts_with($this->payload->path, 'run indexer')) {
+				$parts = explode(' ', $this->payload->path);
+				$index_name = $parts[2] ?? null;
+				if (count($parts) > 3) {
+					return TaskResult::withError($this->payload->path . ' is not a valid index command');
+				}
+				if (count($parts) > 2 && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
+					return TaskResult::withError($index_name . ' is not a valid index name');
+				}
+				$index_name = $index_name ?? '--all';
+				$file = tempnam(sys_get_temp_dir(), "indexer_" . uniqid());
+				exec('bash -c "indexer --rotate ' . $index_name . ' > ' . $file . ' 2>&1" > /dev/null 2>&1 & echo $!', $output, $return);
+				if ((int)$return !== 0) {
+					return TaskResult::withError('error starting the indexer: ' . $return);
+				}
+				return TaskResult::withRow(
+					[
+						'pid' => trim($output[0]),
+						'reference' => uniqid(),
+					]
+				)->column(
+					'pid',
+					Column::String,
+				);
+			}
+
+			if ($this->payload->path === 'show indexer status') {
+				// "show indexer status"
+				exec('ps -eo pid,cmd', $output);
+				array_shift($output); // remove header
+				$rows = [];
+				foreach ($output as $line) {
+					if (!str_contains($line, 'indexer --rotate')) {
+						continue;
+					}
+					$parts = preg_split('/\s+/', trim($line), 2);
+					[, $file] = explode(' > ', $parts[1]);
+					$file = trim($file);
+					[$file] = explode(' ', $file);
+					$contents = file_get_contents($file);
+					$rows[] = [
+						'pid' => $parts[1],
+						'index' => '?',
+						'command' => implode(' ', array_slice($parts, 10)),
+						'output' => !$contents ? '' : $contents,
+					];
+				}
+				return TaskResult::withData(
+					$rows
+				)->column(
+					'pid',
+					Column::String,
+				)->column(
+					'index',
+					Column::String,
+				)->column(
+					'command',
+					Column::String,
+				)->column(
+					'output',
+					Column::String,
+				);
+			}
+			return TaskResult::withError('unknown request');
 		};
 
 		return Task::createInRuntime(
