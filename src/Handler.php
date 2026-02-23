@@ -39,7 +39,9 @@ final class Handler extends BaseHandler
 	public function run(Runtime $runtime): Task
 	{
 		$taskFn = static function (): TaskResult {
-
+			if (PHP_OS_FAMILY === 'Windows') {
+				return TaskResult::withError('this query is not supported on Windows');
+			}
 			// "run indexer index_name"
 			// "run indexer"
 			if (str_starts_with($this->payload->path, 'run indexer')) {
@@ -51,8 +53,13 @@ final class Handler extends BaseHandler
 				if (count($parts) > 2 && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
 					return TaskResult::withError($index_name . ' is not a valid index name');
 				}
+				if (isset($index_name) && str_starts_with($index_name, '-')) {
+					// do not all other options to indexer
+					return TaskResult::withError($index_name . ' is not a valid index name');
+				}
 				$index_name = $index_name ?? '--all';
-				$file = tempnam(sys_get_temp_dir(), "indexer_" . uniqid());
+				$reference = uniqid();
+				$file = tempnam(sys_get_temp_dir(), "indexer_" . $reference . '_');
 				exec('bash -c "indexer --rotate ' . $index_name . ' > ' . $file . ' 2>&1" > /dev/null 2>&1 & echo $!', $output, $return);
 				if ((int)$return !== 0) {
 					return TaskResult::withError('error starting the indexer: ' . $return);
@@ -60,7 +67,7 @@ final class Handler extends BaseHandler
 				return TaskResult::withRow(
 					[
 						'pid' => trim($output[0]),
-						'reference' => uniqid(),
+						'reference' => $reference,
 					]
 				)->column(
 					'pid',
@@ -78,15 +85,17 @@ final class Handler extends BaseHandler
 						continue;
 					}
 					$parts = preg_split('/\s+/', trim($line), 2);
-					[, $file] = explode(' > ', $parts[1]);
+					[$before_output_file, $file] = explode(' > ', $parts[1]);
+					[, $index_name] = explode('--rotate', $before_output_file);
+					$index_name = trim($index_name);
 					$file = trim($file);
 					[$file] = explode(' ', $file);
 					$contents = file_get_contents($file);
 					$rows[] = [
-						'pid' => $parts[1],
-						'index' => '?',
+						'pid' => $parts[0],
+						'index' => $index_name === '--all' ? null : $index_name,
 						'command' => implode(' ', array_slice($parts, 10)),
-						'output' => !$contents ? '' : $contents,
+						'output' => !$contents ? null : $contents,
 					];
 				}
 				return TaskResult::withData(

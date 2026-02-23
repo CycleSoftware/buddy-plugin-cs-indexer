@@ -1,6 +1,20 @@
-# buddy-plugin-template
+# CS Manticore Search Buddy
 
-This is an initial template of a plugin for [Buddy](https://github.com/manticoresoftware/manticoresearch-buddy/) that you can use to develop.
+## Usage
+
+
+``
+run indexer
+``
+
+``
+run indexer index_name
+``
+
+``
+show indexer status
+``
+
 
 ## How to start
 
