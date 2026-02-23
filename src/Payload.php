@@ -42,10 +42,7 @@ final class Payload extends BasePayload
 		$payload = preg_replace('/\s+/', ' ', $request->payload ?? '');
 		$payload = str_replace('  ', ' ', $payload);
 		$payload = trim(strtolower($payload));
-		if ($payload === 'show indexer status') {
-			return true;
-		}
-		if ($payload === 'indexer status') {
+		if (str_starts_with($payload, 'indexer status')) {
 			return true;
 		}
 		if (str_starts_with($payload, 'indexer run')) {

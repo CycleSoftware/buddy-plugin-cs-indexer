@@ -67,9 +67,16 @@ final class Handler extends BaseHandler
 					[
 						'pid' => trim($output[0]),
 						'reference' => $reference,
+						'payload' => $this->payload->path,
 					]
 				)->column(
 					'pid',
+					Column::String,
+				)->column(
+					'reference',
+					Column::String,
+				)->column(
+					'payload',
 					Column::String,
 				);
 			}
@@ -84,6 +91,7 @@ final class Handler extends BaseHandler
 					'index' => null,
 					'command' => 'result:' . $result,
 					'output' => implode(PHP_EOL, $output),
+					'payload' => $this->payload->path,
 				];
 				foreach ($output as $line) {
 					if (!str_contains($line, 'indexer --rotate')) {
@@ -101,6 +109,7 @@ final class Handler extends BaseHandler
 						'index' => $index_name === '--all' ? null : $index_name,
 						'command' => implode(' ', array_slice($parts, 10)),
 						'output' => !$contents ? null : $contents,
+						'payload' => $this->payload->path,
 					];
 				}
 				return TaskResult::withData(
@@ -116,6 +125,9 @@ final class Handler extends BaseHandler
 					Column::String,
 				)->column(
 					'output',
+					Column::String,
+				)->column(
+					'payload',
 					Column::String,
 				);
 			}
