@@ -4,11 +4,11 @@
 
 
 ``
-indexer run
+indexer rotate
 ``
 
 ``
-indexer run index_name
+indexer rotate index_name
 ``
 
 ``
