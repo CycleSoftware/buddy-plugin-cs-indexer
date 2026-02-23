@@ -16,7 +16,6 @@ use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
-use parallel\Runtime;
 
 final class Handler extends BaseHandler
 {
@@ -36,7 +35,7 @@ final class Handler extends BaseHandler
 	 * @return Task
 	 * @throws RuntimeException
 	 */
-	public function run(Runtime $runtime): Task
+	public function run(): Task
 	{
 		$taskFn = static function (): TaskResult {
 			if (PHP_OS_FAMILY === 'Windows') {
@@ -117,8 +116,8 @@ final class Handler extends BaseHandler
 			return TaskResult::withError('unknown request');
 		};
 
-		return Task::createInRuntime(
-			$runtime, $taskFn, []
+		return Task::create(
+			$taskFn
 		)->run();
 	}
 

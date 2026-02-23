@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fb60f1715ef00846de288d1406af734",
+    "content-hash": "c584c1a8a7c2f7be937f115e24bbecd2",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -708,20 +708,21 @@
         },
         {
             "name": "manticoresoftware/buddy-core",
-            "version": "v0.1.0",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/manticoresoftware/buddy-core.git",
-                "reference": "0ec2ea462555d31f732939fa5ed1ebfc4c28b2b3"
+                "reference": "f4fa85c12e1bfd0cadb0def76824c40c39708619"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/manticoresoftware/buddy-core/zipball/0ec2ea462555d31f732939fa5ed1ebfc4c28b2b3",
-                "reference": "0ec2ea462555d31f732939fa5ed1ebfc4c28b2b3",
+                "url": "https://api.github.com/repos/manticoresoftware/buddy-core/zipball/f4fa85c12e1bfd0cadb0def76824c40c39708619",
+                "reference": "f4fa85c12e1bfd0cadb0def76824c40c39708619",
                 "shasum": ""
             },
             "require": {
                 "composer/composer": "^2.5",
+                "manticoresoftware/php-sql-parser": "v4.6.0-patch15",
                 "php-ds/php-ds": "^1.4",
                 "symfony/console": "^6.2",
                 "symfony/dependency-injection": "^6.1"
@@ -732,6 +733,7 @@
                 "slevomat/coding-standard": "^8.5",
                 "squizlabs/php_codesniffer": "^3.7"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -752,9 +754,69 @@
             "description": "The Buddy Core to develop your own plugin for Manticore Search",
             "support": {
                 "issues": "https://github.com/manticoresoftware/buddy-core/issues",
-                "source": "https://github.com/manticoresoftware/buddy-core/tree/v0.1.0"
+                "source": "https://github.com/manticoresoftware/buddy-core/tree/main"
             },
-            "time": "2023-09-19T08:31:13+00:00"
+            "time": "2026-02-19T16:09:12+00:00"
+        },
+        {
+            "name": "manticoresoftware/php-sql-parser",
+            "version": "v4.6.0-patch15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/manticoresoftware/PHP-SQL-Parser.git",
+                "reference": "d41889a06ae1903faf5f5be5fb409bfc7b77bcf7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/manticoresoftware/PHP-SQL-Parser/zipball/d41889a06ae1903faf5f5be5fb409bfc7b77bcf7",
+                "reference": "d41889a06ae1903faf5f5be5fb409bfc7b77bcf7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "analog/analog": "^1.0.6",
+                "phpunit/phpunit": "^9.5.13",
+                "squizlabs/php_codesniffer": "^2.8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPSQLParser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Swanhart",
+                    "email": "greenlion@gmail.com",
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
+                    "role": "Owner"
+                },
+                {
+                    "name": "André Rothe",
+                    "email": "phosco@gmx.de",
+                    "homepage": "https://www.phosco.info",
+                    "role": "Committer"
+                }
+            ],
+            "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
+            "homepage": "https://github.com/greenlion/PHP-SQL-Parser",
+            "keywords": [
+                "creator",
+                "mysql",
+                "parser",
+                "sql"
+            ],
+            "support": {
+                "issues": "https://github.com/greenlion/PHP-SQL-Parser/issues",
+                "source": "https://github.com/greenlion/PHP-SQL-Parser"
+            },
+            "time": "2025-05-26T09:52:22+00:00"
         },
         {
             "name": "php-ds/php-ds",
@@ -4445,10 +4507,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "manticoresoftware/buddy-core": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
