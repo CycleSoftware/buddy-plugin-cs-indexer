@@ -1,4 +1,8 @@
 # CS Manticore Search Buddy
+Package:
+
+https://packagist.org/packages/cyclesoftware/buddy-plugin-cs-indexer
+
 
 ## Usage
 
