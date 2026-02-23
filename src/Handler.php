@@ -41,16 +41,16 @@ final class Handler extends BaseHandler
 			if (PHP_OS_FAMILY === 'Windows') {
 				return TaskResult::withError('this query is not supported on Windows');
 			}
-			// "run indexer run index_name"
-			// "run indexer run"
-			if (str_starts_with($this->payload->path, 'indexer run')) {
+			// "run indexer rotate index_name"
+			// "run indexer rotate"
+			if (str_starts_with($this->payload->path, 'indexer rotate')) {
 				$parts = explode(' ', $this->payload->path);
 				$index_name = $parts[2] ?? null;
 				if (count($parts) > 3) {
 					return TaskResult::withError($this->payload->path . ' is not a valid index command');
 				}
 				if (count($parts) > 2 && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
-					return TaskResult::withError($index_name . ' is not a valid index name');
+					return TaskResult::withError('"'.$index_name . '" is not a valid index name');
 				}
 				if (isset($index_name) && str_starts_with($index_name, '-')) {
 					// do not all other options to indexer
@@ -59,7 +59,7 @@ final class Handler extends BaseHandler
 				$index_name = $index_name ?? '--all';
 				$reference = uniqid();
 				$file = tempnam(sys_get_temp_dir(), "indexer_" . $reference . '_');
-				exec('bash -c "indexer --rotate ' . $index_name . ' > ' . $file . ' 2>&1" > /dev/null 2>&1 & echo $!', $output, $return);
+				exec('bash -c "indexer --rotate "' . $index_name . '" > ' . $file . ' 2>&1" > /dev/null 2>&1 & echo $!', $output, $return);
 				if ((int)$return !== 0) {
 					return TaskResult::withError('error starting the indexer: ' . $return);
 				}
@@ -86,13 +86,6 @@ final class Handler extends BaseHandler
 				exec('ps -eo pid,cmd', $output, $result);
 				array_shift($output); // remove header
 				$rows = [];
-				$rows[] = [
-					'pid' => null,
-					'index' => null,
-					'command' => 'result:' . $result,
-					'output' => implode(PHP_EOL, $output),
-					'payload' => $this->payload->path,
-				];
 				foreach ($output as $line) {
 					if (!str_contains($line, 'indexer --rotate')) {
 						continue;
@@ -103,7 +96,7 @@ final class Handler extends BaseHandler
 					$parts = preg_split('/\s+/', trim($line), 2);
 					[$before_output_file, $file] = explode(' > ', $parts[1]);
 					[, $index_name] = explode('--rotate', $before_output_file);
-					$index_name = trim($index_name);
+					$index_name = trim($index_name, ' "');
 					$file = trim($file);
 					[$file] = explode(' ', $file);
 					$contents = file_get_contents($file);
