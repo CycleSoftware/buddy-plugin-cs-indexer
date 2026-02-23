@@ -46,9 +46,14 @@ final class Handler extends BaseHandler
 					'result' => $this->payload->path,
 				]
 			)->column(
-				'index', Column::String,
-				'is_running', Column::Long,
-				'result', Column::String,
+				'index',
+				Column::String,
+			)->column(
+				'is_running',
+				Column::Long,
+			)->column(
+				'result',
+				Column::String,
 			);
 		};
 
