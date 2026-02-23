@@ -97,6 +97,9 @@ final class Handler extends BaseHandler
 					if (!str_contains($line, 'indexer --rotate')) {
 						continue;
 					}
+					if (!str_contains($line, ' > ')) {
+						continue;
+					}
 					$parts = preg_split('/\s+/', trim($line), 2);
 					[$before_output_file, $file] = explode(' > ', $parts[1]);
 					[, $index_name] = explode('--rotate', $before_output_file);
