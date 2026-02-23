@@ -76,9 +76,15 @@ final class Handler extends BaseHandler
 
 			if ($this->payload->path === 'show indexer status') {
 				// "show indexer status"
-				exec('ps -eo pid,cmd', $output);
+				exec('ps -eo pid,cmd', $output, $result);
 				array_shift($output); // remove header
 				$rows = [];
+				$rows[] = [
+					'pid' => null,
+					'index' => null,
+					'command' => 'result:' . $result,
+					'output' => implode(PHP_EOL, $output),
+				];
 				foreach ($output as $line) {
 					if (!str_contains($line, 'indexer --rotate')) {
 						continue;
@@ -113,9 +119,8 @@ final class Handler extends BaseHandler
 					Column::String,
 				);
 			}
-			return TaskResult::withError('unknown request');
+			return TaskResult::withError('unknown request: '.$this->payload->path);
 		};
-
 		return Task::create(
 			$taskFn
 		)->run();
