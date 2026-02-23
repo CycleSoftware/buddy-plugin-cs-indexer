@@ -37,7 +37,7 @@ final class Handler extends BaseHandler
 	 */
 	public function run(): Task
 	{
-		$taskFn = static function (): TaskResult {
+		$taskFn = function (): TaskResult {
 			if (PHP_OS_FAMILY === 'Windows') {
 				return TaskResult::withError('this query is not supported on Windows');
 			}
