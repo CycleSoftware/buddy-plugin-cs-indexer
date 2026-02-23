@@ -41,9 +41,9 @@ final class Handler extends BaseHandler
 			if (PHP_OS_FAMILY === 'Windows') {
 				return TaskResult::withError('this query is not supported on Windows');
 			}
-			// "run indexer index_name"
-			// "run indexer"
-			if (str_starts_with($this->payload->path, 'run indexer')) {
+			// "run indexer run index_name"
+			// "run indexer run"
+			if (str_starts_with($this->payload->path, 'indexer run')) {
 				$parts = explode(' ', $this->payload->path);
 				$index_name = $parts[2] ?? null;
 				if (count($parts) > 3) {
@@ -74,7 +74,7 @@ final class Handler extends BaseHandler
 				);
 			}
 
-			if ($this->payload->path === 'show indexer status') {
+			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				// "show indexer status"
 				exec('ps -eo pid,cmd', $output, $result);
 				array_shift($output); // remove header
@@ -119,7 +119,7 @@ final class Handler extends BaseHandler
 					Column::String,
 				);
 			}
-			return TaskResult::withError('unknown request: '.$this->payload->path);
+			return TaskResult::withError('unknown request: ' . $this->payload->path);
 		};
 		return Task::create(
 			$taskFn

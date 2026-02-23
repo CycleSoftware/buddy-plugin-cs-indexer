@@ -45,7 +45,10 @@ final class Payload extends BasePayload
 		if ($payload === 'show indexer status') {
 			return true;
 		}
-		if (str_starts_with($payload, 'run indexer')) {
+		if ($payload === 'indexer status') {
+			return true;
+		}
+		if (str_starts_with($payload, 'indexer run')) {
 			return true;
 		}
 		return false;
