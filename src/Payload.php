@@ -29,9 +29,7 @@ final class Payload extends BasePayload
 	public static function fromRequest(Request $request): static
 	{
 		$self = new static();
-		// TODO: add logic of parsing request into payload here
-		// We just need to do something, but actually its' just for PHPstan
-		$self->path = $request->path;
+		$self->path = $request->payload;
 		return $self;
 	}
 
