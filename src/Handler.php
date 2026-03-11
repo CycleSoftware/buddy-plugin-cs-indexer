@@ -100,13 +100,14 @@ final class Handler extends BaseHandler
 					$index_name = trim($index_name, ' "');
 					$file = trim($file);
 					[$file] = explode(' ', $file);
-					$contents = file_get_contents($file);
+					$contents = @file_get_contents($file);
 					if (!$contents) {
 						@file_put_contents(
 							sys_get_temp_dir() . "/indexer_buddy_error.log",
 							date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]),
 							FILE_APPEND
 						);
+						continue;
 					}
 					$rows[] = [
 						'pid' => $parts[0],
