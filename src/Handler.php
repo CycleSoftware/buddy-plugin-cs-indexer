@@ -61,19 +61,11 @@ final class Handler extends BaseHandler
 				if ((int)$return !== 0) {
 					return TaskResult::withError('error starting the indexer: ' . $return);
 				}
-
-				@file_put_contents(
-					sys_get_temp_dir() . "/indexer_buddy_error.log",
-					date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $reference]).\PHP_EOL,
-					FILE_APPEND
-				);
-
 				return TaskResult::withRow(
 					[
 						'pid' => trim($output[0]),
 						'reference' => $reference,
 						'payload' => $this->payload->path,
-						'output' => $file,
 					]
 				)->column(
 					'pid',
@@ -92,6 +84,13 @@ final class Handler extends BaseHandler
 				exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
 				array_shift($output); // remove header
 				$rows = [];
+
+				@file_put_contents(
+					sys_get_temp_dir() . "/indexer_buddy_error.log",
+					date('Y-m-d H:i:s') . ' - output - ' . json_encode($output).\PHP_EOL,
+					FILE_APPEND
+				);
+
 
 				foreach ($output as $line) {
 					if (!str_contains($line, 'indexer --rotate')) {
