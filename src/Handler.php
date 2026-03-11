@@ -95,12 +95,6 @@ final class Handler extends BaseHandler
 						continue;
 					}
 
-					@file_put_contents(
-						sys_get_temp_dir() . "/indexer_buddy_error.log",
-						date('Y-m-d H:i:s') . ' - debug - ' . json_encode([$parts]) . \PHP_EOL,
-						FILE_APPEND
-					);
-
 					[$before_output_file, $file] = explode(' > ', $parts[1]);
 					[, $index_name] = explode('--rotate', $before_output_file);
 					$index_name = trim($index_name, ' "');
@@ -124,6 +118,14 @@ final class Handler extends BaseHandler
 						);
 						continue;
 					}
+
+
+					@file_put_contents(
+						sys_get_temp_dir() . "/indexer_buddy_error.log",
+						date('Y-m-d H:i:s') . ' - debug - ' . json_encode($rows) . \PHP_EOL,
+						FILE_APPEND
+					);
+
 					$rows[] = [
 						'pid' => $parts[0],
 						'index' => $index_name === '--all' ? null : $index_name,
