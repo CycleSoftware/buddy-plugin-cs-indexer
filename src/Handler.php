@@ -118,7 +118,7 @@ final class Handler extends BaseHandler
 					if (!$contents) {
 						@file_put_contents(
 							sys_get_temp_dir() . "/indexer_buddy_error.log",
-							date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]),
+							date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]).\PHP_EOL,
 							FILE_APPEND
 						);
 						continue;
