@@ -85,16 +85,18 @@ final class Handler extends BaseHandler
 				//array_shift($output); // remove header
 				$rows = [];
 
-				@file_put_contents(
-					sys_get_temp_dir() . "/indexer_buddy_error.log",
-					date('Y-m-d H:i:s') . ' - output - ' . json_encode($output).\PHP_EOL,
-					FILE_APPEND
-				);
-
 				foreach ($output as $line) {
 							if (!str_contains($line, ' > ')) {
 						continue;
 					}
+
+					@file_put_contents(
+						sys_get_temp_dir() . "/indexer_buddy_error.log",
+						date('Y-m-d H:i:s') . ' - is_file - ' . json_encode([$line]).\PHP_EOL,
+						FILE_APPEND
+					);
+
+
 					$parts = preg_split('/\s+/', trim($line), 2);
 					if ($parts === false) {
 						continue;
@@ -104,13 +106,6 @@ final class Handler extends BaseHandler
 					$index_name = trim($index_name, ' "');
 					$file = trim($file);
 					[$file] = explode(' ', $file);
-
-
-					@file_put_contents(
-						sys_get_temp_dir() . "/indexer_buddy_error.log",
-						date('Y-m-d H:i:s') . ' - is_file - ' . json_encode(['@'.$file.'@', $line]).\PHP_EOL,
-						FILE_APPEND
-					);
 
 					if(!is_file($file)) {
 						@file_put_contents(
