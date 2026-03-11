@@ -90,17 +90,14 @@ final class Handler extends BaseHandler
 						continue;
 					}
 					$parts = preg_split('/\s+/', trim($line), 2);
-
 					if ($parts === false) {
 						continue;
 					}
-
 					[$before_output_file, $file] = explode(' > ', $parts[1]);
 					[, $index_name] = explode('--rotate', $before_output_file);
 					$index_name = trim($index_name, ' "');
 					$file = trim($file);
 					[$file] = explode(' ', $file);
-
 					if (!is_file($file)) {
 						@file_put_contents(
 							sys_get_temp_dir() . "/indexer_buddy_error.log",
@@ -108,7 +105,6 @@ final class Handler extends BaseHandler
 							FILE_APPEND
 						);
 					}
-
 					$contents = @file_get_contents($file);
 					if (!$contents) {
 						@file_put_contents(
@@ -118,7 +114,6 @@ final class Handler extends BaseHandler
 						);
 						continue;
 					}
-
 					$rows[] = [
 						'pid' => $parts[0],
 						'index' => $index_name === '--all' ? null : $index_name,
@@ -127,13 +122,6 @@ final class Handler extends BaseHandler
 						'payload' => $this->payload->path,
 					];
 				}
-
-				@file_put_contents(
-					sys_get_temp_dir() . "/indexer_buddy_error.log",
-					date('Y-m-d H:i:s') . ' - debug - ' . json_encode($rows) . \PHP_EOL,
-					FILE_APPEND
-				);
-
 				return TaskResult::withData(
 					$rows
 				)->column(
