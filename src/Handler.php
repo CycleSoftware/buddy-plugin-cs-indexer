@@ -64,7 +64,7 @@ final class Handler extends BaseHandler
 
 				@file_put_contents(
 					sys_get_temp_dir() . "/indexer_buddy_error.log",
-					date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $reference]),
+					date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $reference]).\PHP_EOL,
 					FILE_APPEND
 				);
 
@@ -110,7 +110,7 @@ final class Handler extends BaseHandler
 
 					@file_put_contents(
 						sys_get_temp_dir() . "/indexer_buddy_error.log",
-						date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]),
+						date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]).\PHP_EOL,
 						FILE_APPEND
 					);
 
