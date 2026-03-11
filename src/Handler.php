@@ -100,6 +100,9 @@ final class Handler extends BaseHandler
 					$file = trim($file);
 					[$file] = explode(' ', $file);
 					$contents = file_get_contents($file);
+					if (!$contents) {
+						@file_put_contents(sys_get_temp_dir()."/indexer_buddy_error.log", json_encode([$file,$line]));
+					}
 					$rows[] = [
 						'pid' => $parts[0],
 						'index' => $index_name === '--all' ? null : $index_name,
