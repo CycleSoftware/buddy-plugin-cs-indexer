@@ -21,6 +21,7 @@ use Manticoresearch\Buddy\Core\Plugin\BasePayload;
  */
 final class Payload extends BasePayload
 {
+
 	public string $path;
 
 	/**
