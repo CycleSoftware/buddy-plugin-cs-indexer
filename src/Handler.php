@@ -90,7 +90,7 @@ final class Handler extends BaseHandler
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				// "show indexer status"
 
-				exec('ps -eo pid,cmd ww | grep indexer', $output, $result);
+				exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
 
 				@file_put_contents(
 					sys_get_temp_dir() . "/indexer_buddy_error.log",
@@ -98,11 +98,8 @@ final class Handler extends BaseHandler
 					FILE_APPEND
 				);
 
-
 				array_shift($output); // remove header
 				$rows = [];
-
-
 
 				foreach ($output as $line) {
 					if (!str_contains($line, 'indexer --rotate')) {
