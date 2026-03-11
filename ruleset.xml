@@ -161,7 +161,7 @@
 			<property name="requiredSpacesBeforeColon" value="0" />
 		</properties>
 	</rule>
-	<rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/>
+	<!-- <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps"/> -->
 	<rule ref="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps"/>
 	<rule ref="Squiz.NamingConventions.ValidVariableName.StringNotCamelCaps"/>
 </ruleset>

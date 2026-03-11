@@ -12,8 +12,8 @@
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
 use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
-use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\Column;
+use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
 
@@ -25,9 +25,7 @@ final class Handler extends BaseHandler
 	 * @param Payload $payload
 	 * @return void
 	 */
-	public function __construct(public Payload $payload)
-	{
-	}
+	public function __construct(public Payload $payload) {}
 
 	/**
 	 * Process the request
@@ -49,8 +47,8 @@ final class Handler extends BaseHandler
 				if (count($parts) > 3) {
 					return TaskResult::withError($this->payload->path . ' is not a valid index command');
 				}
-				if (count($parts) > 2 && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
-					return TaskResult::withError('"'.$index_name . '" is not a valid index name');
+				if (count($parts) > 2 && $index_name !== null && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
+					return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 				}
 				if (isset($index_name) && str_starts_with($index_name, '-')) {
 					// do not all other options to indexer
@@ -94,6 +92,9 @@ final class Handler extends BaseHandler
 						continue;
 					}
 					$parts = preg_split('/\s+/', trim($line), 2);
+					if ($parts === false) {
+						continue;
+					}
 					[$before_output_file, $file] = explode(' > ', $parts[1]);
 					[, $index_name] = explode('--rotate', $before_output_file);
 					$index_name = trim($index_name, ' "');
@@ -102,8 +103,8 @@ final class Handler extends BaseHandler
 					$contents = file_get_contents($file);
 					if (!$contents) {
 						@file_put_contents(
-							sys_get_temp_dir()."/indexer_buddy_error.log",
-							date('Y-m-d H:i:s').' - '.json_encode([$file,$line]),
+							sys_get_temp_dir() . "/indexer_buddy_error.log",
+							date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]),
 							FILE_APPEND
 						);
 					}

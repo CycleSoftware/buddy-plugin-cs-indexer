@@ -17,9 +17,11 @@ use Manticoresearch\Buddy\Core\Plugin\BasePayload;
 /**
  * This is simple do nothing request that handle empty queries
  * which can be as a result of only comments in it that we strip
+ * @extends BasePayload<array{}>
  */
 final class Payload extends BasePayload
 {
+
 	public string $path;
 
 	/**
@@ -39,7 +41,7 @@ final class Payload extends BasePayload
 	 */
 	public static function hasMatch(Request $request): bool
 	{
-		$payload = preg_replace('/\s+/', ' ', $request->payload ?? '');
+		$payload = preg_replace('/\s+/', ' ', $request->payload ?? '') ?? '';
 		$payload = str_replace('  ', ' ', $payload);
 		$payload = trim(strtolower($payload));
 		if (str_starts_with($payload, 'indexer status')) {
