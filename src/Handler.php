@@ -82,7 +82,7 @@ final class Handler extends BaseHandler
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				// "show indexer status"
 				exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
-				array_shift($output); // remove header
+				//array_shift($output); // remove header
 				$rows = [];
 
 				@file_put_contents(
@@ -91,12 +91,8 @@ final class Handler extends BaseHandler
 					FILE_APPEND
 				);
 
-
 				foreach ($output as $line) {
-					if (!str_contains($line, 'indexer --rotate')) {
-						continue;
-					}
-					if (!str_contains($line, ' > ')) {
+							if (!str_contains($line, ' > ')) {
 						continue;
 					}
 					$parts = preg_split('/\s+/', trim($line), 2);
