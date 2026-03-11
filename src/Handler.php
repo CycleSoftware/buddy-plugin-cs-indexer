@@ -73,6 +73,7 @@ final class Handler extends BaseHandler
 						'pid' => trim($output[0]),
 						'reference' => $reference,
 						'payload' => $this->payload->path,
+						'log_file' => $file,
 					]
 				)->column(
 					'pid',
