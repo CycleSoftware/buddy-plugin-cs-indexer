@@ -39,7 +39,7 @@ final class Payload extends BasePayload
 	 */
 	public static function hasMatch(Request $request): bool
 	{
-		$payload = preg_replace('/\s+/', ' ', $request->payload ?? '');
+		$payload = preg_replace('/\s+/', ' ', $request->payload ?? '') ?? '';
 		$payload = str_replace('  ', ' ', $payload);
 		$payload = trim(strtolower($payload));
 		if (str_starts_with($payload, 'indexer status')) {
