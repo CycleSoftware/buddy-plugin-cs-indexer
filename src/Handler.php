@@ -89,15 +89,7 @@ final class Handler extends BaseHandler
 
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				// "show indexer status"
-
 				exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
-
-				@file_put_contents(
-					sys_get_temp_dir() . "/indexer_buddy_error.log",
-					date('Y-m-d H:i:s') . ' - ' . json_encode($output).\PHP_EOL,
-					FILE_APPEND
-				);
-
 				array_shift($output); // remove header
 				$rows = [];
 
@@ -118,13 +110,22 @@ final class Handler extends BaseHandler
 					$file = trim($file);
 					[$file] = explode(' ', $file);
 
+
+					if(!is_file($file)) {
+						@file_put_contents(
+							sys_get_temp_dir() . "/indexer_buddy_error.log",
+							date('Y-m-d H:i:s') . ' - is_file - ' . json_encode([$file, $line]).\PHP_EOL,
+							FILE_APPEND
+						);
+					}
+
    				$contents = @file_get_contents($file);
 					if (!$contents) {
-					//	@file_put_contents(
-					//		sys_get_temp_dir() . "/indexer_buddy_error.log",
-					//		date('Y-m-d H:i:s') . ' - ' . json_encode([$file, $line]).\PHP_EOL,
-					//		FILE_APPEND
-					//	);
+						@file_put_contents(
+							sys_get_temp_dir() . "/indexer_buddy_error.log",
+							date('Y-m-d H:i:s') . ' - false content - ' . json_encode([$file, $line]).\PHP_EOL,
+							FILE_APPEND
+						);
 						continue;
 					}
 					$rows[] = [
