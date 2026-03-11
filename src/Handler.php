@@ -119,13 +119,6 @@ final class Handler extends BaseHandler
 						continue;
 					}
 
-
-					@file_put_contents(
-						sys_get_temp_dir() . "/indexer_buddy_error.log",
-						date('Y-m-d H:i:s') . ' - debug - ' . json_encode($rows) . \PHP_EOL,
-						FILE_APPEND
-					);
-
 					$rows[] = [
 						'pid' => $parts[0],
 						'index' => $index_name === '--all' ? null : $index_name,
@@ -134,6 +127,13 @@ final class Handler extends BaseHandler
 						'payload' => $this->payload->path,
 					];
 				}
+
+				@file_put_contents(
+					sys_get_temp_dir() . "/indexer_buddy_error.log",
+					date('Y-m-d H:i:s') . ' - debug - ' . json_encode($rows) . \PHP_EOL,
+					FILE_APPEND
+				);
+
 				return TaskResult::withData(
 					$rows
 				)->column(
