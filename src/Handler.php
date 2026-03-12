@@ -112,7 +112,7 @@ final class Handler extends BaseHandler
 							date('Y-m-d H:i:s') . ' - false content - ' . json_encode([$file, $line]) . \PHP_EOL,
 							FILE_APPEND
 						);
-						continue;
+						$contents = 'can\'t read indexer file';
 					}
 					$rows[] = [
 						'pid' => $parts[0],
