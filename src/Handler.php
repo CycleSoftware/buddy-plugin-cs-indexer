@@ -61,12 +61,16 @@ final class Handler extends BaseHandler
 				if ((int)$return !== 0) {
 					return TaskResult::withError('error starting the indexer: ' . $return);
 				}
-				return TaskResult::withRow(
-					[
-						'pid' => trim($output[0]),
-						'reference' => $reference,
-						'payload' => $this->payload->path,
-					]
+				$row = [
+					'pid' => trim($output[0]),
+					'reference' => $reference,
+					'payload' => $this->payload->path,
+				];
+				if($index_name !== '--all') {
+					$row['index'] = $index_name;
+				}
+				$task_result = TaskResult::withRow(
+					$row
 				)->column(
 					'pid',
 					Column::String,
@@ -77,6 +81,13 @@ final class Handler extends BaseHandler
 					'payload',
 					Column::String,
 				);
+				if($index_name !== '--all') {
+					$task_result->column(
+						'index',
+						Column::String,
+					);
+				}
+				return $task_result;
 			}
 
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
