@@ -70,12 +70,12 @@ final class Handler extends BaseHandler
 	 */
 	protected function get_node_id(): ?TaskResult
 	{
-		if(!is_file('/etc/manticore/node-id')) {
+		if(!is_file('/etc/manticoresearch/node-id')) {
 			return TaskResult::withError('no node id file');
 		}
 		return TaskResult::withRow(
 			[
-				'node_id' => file_get_contents('/etc/manticore/node-id'),
+				'node_id' => file_get_contents('/etc/manticoresearch/node-id'),
 			]
 		)->column(
 			'node_id',
