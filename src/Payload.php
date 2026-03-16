@@ -50,7 +50,7 @@ final class Payload extends BasePayload
 		if (str_starts_with($payload, 'indexer rotate')) {
 			return true;
 		}
-		if (str_starts_with($payload, 'show indexer nodeid')) {
+		if (str_starts_with($payload, 'indexer nodeid')) {
 			return true;
 		}
 		return false;
