@@ -47,7 +47,7 @@ final class Handler extends BaseHandler
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				return $this->indexer_show_status();
 			}
-			if($this->payload->path === 'select @@node-id') {
+			if($this->payload->path === 'select @@nodeid') {
 					return $this->get_node_id();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
