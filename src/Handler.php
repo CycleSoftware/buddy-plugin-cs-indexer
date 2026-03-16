@@ -79,7 +79,7 @@ final class Handler extends BaseHandler
 			]
 		)->column(
 			'node_id',
-			Column::Long,
+			Column::String,
 		);
 	}
 
