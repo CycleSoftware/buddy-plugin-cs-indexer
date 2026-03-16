@@ -75,7 +75,7 @@ final class Handler extends BaseHandler
 		}
 		return TaskResult::withRow(
 			[
-				'node_id' => (int)file_get_contents('/etc/manticore/node-id'),
+				'node_id' => file_get_contents('/etc/manticore/node-id'),
 			]
 		)->column(
 			'node_id',
