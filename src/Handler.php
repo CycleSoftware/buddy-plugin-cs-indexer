@@ -71,7 +71,7 @@ final class Handler extends BaseHandler
 	protected function get_node_id(): ?TaskResult
 	{
 		if(!is_file('/etc/manticore/node-id')) {
-			throw new RuntimeException('no node id file');
+			return TaskResult::withError('no node id file');
 		}
 		return TaskResult::withRow(
 			[
