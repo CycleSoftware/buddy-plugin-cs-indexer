@@ -225,8 +225,12 @@ final class Handler extends BaseHandler
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
+				$filename = FilenameSanitize::of(pathinfo($file, PATHINFO_FILENAME))->get();
+				if(str_contains('.',$filename)) {
+					[$filename,] = explode('.',$filename);
+				}
 				$rows[] = [
-					'index' => FilenameSanitize::of(pathinfo($file, PATHINFO_FILENAME))->get(),
+					'index' => $filename,
 					'filename' => FilenameSanitize::of(basename($file))->get(),
 					'timestamp' => date('Y-m-d H:i:s', filemtime($file))
 				];
