@@ -147,9 +147,7 @@ final class Handler extends BaseHandler
 	{
 		// "show indexer status"
 		exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
-		//array_shift($output); // remove header
 		$rows = [];
-
 		foreach ($output as $line) {
 			if (!str_contains($line, ' > ')) {
 				continue;
@@ -223,13 +221,12 @@ final class Handler extends BaseHandler
 		}
 
 		$index_name = !isset($index_name) ? '*.spa' : $index_name . '*.spa';
-
 		$files = glob('/var/lib/manticore/data/' . $index_name);
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
 				$rows[] = [
-					'index' => 'index',
+					'index' => pathinfo($file, PATHINFO_FILENAME),
 					'filename' => basename($file),
 					'timestamp' => date('Y-m-d H:i:s', filemtime($file))
 				];
