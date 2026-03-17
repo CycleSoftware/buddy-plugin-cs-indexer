@@ -11,13 +11,14 @@
 
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
-use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithClient;
+use Manticoresearch\Buddy\Core\Error\ManticoreSearchClientError;
+use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithFlagCache;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
 
-final class Handler extends BaseHandlerWithClient
+final class Handler extends BaseHandlerWithFlagCache
 {
 	/**
 	 * Initialize the executor
@@ -103,8 +104,6 @@ final class Handler extends BaseHandlerWithClient
 			// do not all other options to indexer
 			return TaskResult::withError($index_name . ' is not a valid index name');
 		}
-
-
 		$index_name = $index_name ?? '--all';
 		$reference = uniqid();
 		$file = tempnam(sys_get_temp_dir(), "indexer_" . $reference . '_');
@@ -210,6 +209,7 @@ final class Handler extends BaseHandlerWithClient
 
 	/**
 	 * @return TaskResult
+	 * @throws ManticoreSearchClientError
 	 */
 	protected function show_unattached(): TaskResult
 	{
