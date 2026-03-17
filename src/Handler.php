@@ -218,7 +218,11 @@ final class Handler extends BaseHandler
 
 		file_put_contents(
 			sys_get_temp_dir().'/debug.json',
-			json_encode([$index_name,$parts]).PHP_EOL,
+			json_encode([
+				$index_name,
+				$parts,
+				preg_replace("/[^a-zA-Z0-9*'" . preg_quote('_-') . "]+/", "", $index_name)
+			]).PHP_EOL,
 			FILE_APPEND
 		);
 
