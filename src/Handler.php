@@ -66,7 +66,7 @@ final class Handler extends BaseHandlerWithClient
 	 */
 	public function getProps(): array
 	{
-		return [];
+		return ['manticoreClient'];
 	}
 
 	/**
