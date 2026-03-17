@@ -11,7 +11,6 @@
 
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
-use Manticoresearch\Buddy\Core\Error\ManticoreSearchClientError;
 use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
