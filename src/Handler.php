@@ -213,7 +213,6 @@ final class Handler extends BaseHandler
 	{
 		$parts = explode(' ', $this->payload->path);
 		$index_name = $parts[3] ?? null;
-
 		if (count($parts) > 4 || $index_name === null) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
@@ -223,11 +222,6 @@ final class Handler extends BaseHandler
 		}
 		$index_name = str_replace('%','*', $index_name . '.spa');
 		$files = glob('/var/lib/manticore/data/' .$index_name);
-		file_put_contents(
-			sys_get_temp_dir() . "/debug.json",
-			json_encode([FilenameSanitize::of($index_name)->get(),$files]).PHP_EOL,
-			FILE_APPEND
-		);
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
