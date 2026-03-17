@@ -16,6 +16,7 @@ use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
+use OndrejVrto\FilenameSanitize\FilenameSanitize;
 use RuntimeException;
 
 final class Handler extends BaseHandler
@@ -51,8 +52,8 @@ final class Handler extends BaseHandler
 			if (str_starts_with($this->payload->path, 'indexer nodeid')) {
 				return $this->get_node_id();
 			}
-			if (str_starts_with($this->payload->path, 'show unattached')) {
-				return $this->show_unattached();
+			if (str_starts_with($this->payload->path, 'show unattached like')) {
+				return $this->show_unattached_like();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
 		};
@@ -207,9 +208,8 @@ final class Handler extends BaseHandler
 
 	/**
 	 * @return TaskResult
-	 * @throws ManticoreSearchClientError
 	 */
-	protected function show_unattached(): TaskResult
+	protected function show_unattached_like(): TaskResult
 	{
 		$parts = explode(' ', $this->payload->path);
 		$index_name = $parts[2] ?? null;
@@ -221,13 +221,13 @@ final class Handler extends BaseHandler
 		}
 
 		$index_name = !isset($index_name) ? '*.spa' : $index_name . '*.spa';
-		$files = glob('/var/lib/manticore/data/' . $index_name);
+		$files = glob('/var/lib/manticore/data/' . FilenameSanitize::of($index_name)->get());
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
 				$rows[] = [
-					'index' => pathinfo($file, PATHINFO_FILENAME),
-					'filename' => basename($file),
+					'index' => FilenameSanitize::of(pathinfo($file, PATHINFO_FILENAME))->get(),
+					'filename' => FilenameSanitize::of(basename($file))->get(),
 					'timestamp' => date('Y-m-d H:i:s', filemtime($file))
 				];
 			}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c584c1a8a7c2f7be937f115e24bbecd2",
+    "content-hash": "a6446dc4f4cf6c68432ffd0715bb2dfb",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -817,6 +817,69 @@
                 "source": "https://github.com/greenlion/PHP-SQL-Parser"
             },
             "time": "2025-05-26T09:52:22+00:00"
+        },
+        {
+            "name": "ondrej-vrto/php-filename-sanitize",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OndrejVrto/php-filename-sanitize.git",
+                "reference": "0bbcb7a205de2f698e893128d40a39d15f9e7e68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OndrejVrto/php-filename-sanitize/zipball/0bbcb7a205de2f698e893128d40a39d15f9e7e68",
+                "reference": "0bbcb7a205de2f698e893128d40a39d15f9e7e68",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=4.0.7"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.2",
+                "pestphp/pest": "^2.26",
+                "php": "^8.1",
+                "phpstan/phpstan": "^1.9",
+                "rector/rector": "^1.0.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OndrejVrto\\FilenameSanitize\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondrej Vrťo",
+                    "email": "ondrej.vrto@gmail.com",
+                    "homepage": "https://ondrejvrto.eu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Removes all forbidden characters from the file name or path.",
+            "homepage": "https://github.com/OndrejVrto/php-filename-sanitize",
+            "keywords": [
+                "clean",
+                "filename",
+                "ondrej vrto",
+                "php",
+                "sanitize"
+            ],
+            "support": {
+                "issues": "https://github.com/OndrejVrto/php-filename-sanitize/issues",
+                "source": "https://github.com/OndrejVrto/php-filename-sanitize/tree/1.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/OndrejVrto",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-17T09:13:18+00:00"
         },
         {
             "name": "php-ds/php-ds",
@@ -4514,5 +4577,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
