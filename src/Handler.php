@@ -227,24 +227,14 @@ final class Handler extends BaseHandler
 		$files = glob('/var/lib/manticore/data/' . $index_name);
 		$rows = [];
 		if (!empty($files)) {
-
-
-
-			file_put_contents(sys_get_temp_dir().'/debug.txt',json_encode(
-				$files
-			),FILE_APPEND);
-
-
-
-			$rows[] = [
-				'index' => 'index',
-				'filename' => '',
-				'timestamp' => ''
-			];
-
+			foreach ($files as $file) {
+				$rows[] = [
+					'index' => 'index',
+					'filename' => basename($file),
+					'timestamp' => date('Y-m-d H:i:s', filemtime($file))
+				];
+			}
 		}
-
-
 		return TaskResult::withData(
 			$rows
 		)->column(
