@@ -221,10 +221,8 @@ final class Handler extends BaseHandler
 		if ( $index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
-		$index_name = str_replace('%','*', $index_name . 'spa');
-
-
-		$files = glob('/var/lib/manticore/data/' . FilenameSanitize::of($index_name)->get());
+		$index_name = str_replace('%','*', $index_name . '.spa');
+		$files = glob('/var/lib/manticore/data/' .$index_name);
 		file_put_contents(
 			sys_get_temp_dir() . "/debug.json",
 			json_encode([FilenameSanitize::of($index_name)->get(),$files]).PHP_EOL,
