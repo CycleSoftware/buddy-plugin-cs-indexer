@@ -215,9 +215,10 @@ final class Handler extends BaseHandler
 		$index_name = $parts[3] ?? null;
 
 
+
 		file_put_contents(
 			sys_get_temp_dir().'/debug.json',
-			json_encode([$index_name,$parts]),
+			json_encode([$index_name,$parts]).PHP_EOL,
 			FILE_APPEND
 		);
 
@@ -225,7 +226,7 @@ final class Handler extends BaseHandler
 		if (count($parts) > 3) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
-		if ($index_name !== null && $index_name !== preg_replace("/[^a-zA-Z0-9_*'-]+/", "", $index_name)) {
+		if ($index_name !== null && $index_name !== preg_replace("/[^a-zA-Z0-9*'" . preg_quote('_-') . "]+/", "", $index_name)) {
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
 		$index_name = !isset($index_name) ? '*.spa' : $index_name . '*.spa';
