@@ -11,13 +11,13 @@
 
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
-use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
+use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithClient;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
 
-final class Handler extends BaseHandler
+final class Handler extends BaseHandlerWithClient
 {
 	/**
 	 * Initialize the executor
@@ -49,6 +49,9 @@ final class Handler extends BaseHandler
 			}
 			if(str_starts_with($this->payload->path, 'indexer nodeid')) {
 					return $this->get_node_id();
+			}
+			if(str_starts_with($this->payload->path, 'show unattached')) {
+					return $this->show_unattached();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
 		};
@@ -100,6 +103,8 @@ final class Handler extends BaseHandler
 			// do not all other options to indexer
 			return TaskResult::withError($index_name . ' is not a valid index name');
 		}
+
+
 		$index_name = $index_name ?? '--all';
 		$reference = uniqid();
 		$file = tempnam(sys_get_temp_dir(), "indexer_" . $reference . '_');
@@ -199,6 +204,50 @@ final class Handler extends BaseHandler
 			Column::String,
 		)->column(
 			'payload',
+			Column::String,
+		);
+	}
+
+	/**
+	 * @return TaskResult
+	 */
+	protected function show_unattached(): TaskResult
+	{
+		$parts = explode(' ', $this->payload->path);
+
+
+		$response = $this->manticoreClient->sendRequest('SHOW SETTINGS');
+
+
+		file_put_contents(sys_get_temp_dir().'debug.txt',json_encode($response->getBody()),FILE_APPEND);
+
+
+		$index_name = $parts[2] ?? null;
+		if ($index_name === null || count($parts) > 3) {
+			return TaskResult::withError($this->payload->path . ' is not a valid index command');
+		}
+		if ($index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
+			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
+		}
+
+		$rows=[];
+
+		$rows[] = [
+			'index' => 'index',
+			'filename' => '',
+			'timestamp' => ''
+		];
+
+		return TaskResult::withData(
+			$rows
+		)->column(
+			'index',
+			Column::String,
+		)->column(
+			'filename',
+			Column::String,
+		)->column(
+			'timestamp',
 			Column::String,
 		);
 	}
