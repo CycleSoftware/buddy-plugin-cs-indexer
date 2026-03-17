@@ -226,7 +226,7 @@ final class Handler extends BaseHandler
 		if (!empty($files)) {
 			foreach ($files as $file) {
 				$filename = FilenameSanitize::of(pathinfo($file, PATHINFO_FILENAME))->get();
-				if(str_contains('.',$filename)) {
+				if(str_contains($filename,'.')) {
 					[$filename,] = explode('.',$filename);
 				}
 				$rows[] = [
