@@ -12,13 +12,13 @@
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
 use Manticoresearch\Buddy\Core\Error\ManticoreSearchClientError;
-use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithFlagCache;
+use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithClient;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
 
-final class Handler extends BaseHandlerWithFlagCache
+final class Handler extends BaseHandlerWithClient
 {
 	/**
 	 * Initialize the executor
