@@ -222,7 +222,14 @@ final class Handler extends BaseHandler
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
 		$index_name = str_replace('%','*', $index_name . 'spa');
+
+
 		$files = glob('/var/lib/manticore/data/' . FilenameSanitize::of($index_name)->get());
+		file_put_contents(
+			sys_get_temp_dir() . "/debug.json",
+			json_encode([FilenameSanitize::of($index_name)->get(),$files]).PHP_EOL,
+			FILE_APPEND
+		);
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
