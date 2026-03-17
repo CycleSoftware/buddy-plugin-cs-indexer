@@ -214,14 +214,14 @@ final class Handler extends BaseHandler
 		$parts = explode(' ', $this->payload->path);
 		$index_name = $parts[3] ?? null;
 
-		if (count($parts) > 4) {
+		if (count($parts) > 4 || $index_name === null) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
-		$index_name = trim($index_name, "'");
-		if ($index_name !== null && $index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
+		$index_name = trim($index_name ?? '', "'");
+		if ( $index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
-		$index_name = !isset($index_name) ? '*.spa' : $index_name . '*.spa';
+		$index_name = str_replace('%','*', $index_name . 'spa');
 		$files = glob('/var/lib/manticore/data/' . FilenameSanitize::of($index_name)->get());
 		$rows = [];
 		if (!empty($files)) {
