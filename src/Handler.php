@@ -214,7 +214,7 @@ final class Handler extends BaseHandler
 		$parts = explode(' ', $this->payload->path);
 		$index_name = $parts[3] ?? null;
 
-		if (count($parts) > 3) {
+		if (count($parts) > 4) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
 		$index_name = trim($index_name, "'");
