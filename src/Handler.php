@@ -11,7 +11,6 @@
 
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
-use Manticoresearch\Buddy\Core\Error\ManticoreSearchClientError;
 use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
@@ -217,10 +216,10 @@ final class Handler extends BaseHandler
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
 		$index_name = trim($index_name ?? '', "'");
-		if ( $index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
+		if ($index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
-		$index_name = str_replace('%','*', $index_name) |> FilenameSanitize::of(...)->get();
+		$index_name = FilenameSanitize::of(str_replace('%', '*', $index_name))->get();
 		$base_dir = '/var/lib/manticore/data';
 		$files = glob("{$base_dir}/{$index_name}.spa");
 		$rows = [];
