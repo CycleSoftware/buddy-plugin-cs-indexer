@@ -219,7 +219,7 @@ final class Handler extends BaseHandlerWithClient
 		$response = $this->manticoreClient->sendRequest('SHOW SETTINGS');
 
 
-		file_put_contents(sys_get_temp_dir().'debug.txt',json_encode($response->getBody()),FILE_APPEND);
+		file_put_contents(sys_get_temp_dir().'/debug.txt',json_encode($response->getBody()),FILE_APPEND);
 
 
 		$index_name = $parts[2] ?? null;
