@@ -12,13 +12,13 @@
 namespace Manticoresearch\Buddy\Plugin\CsIndexer;
 
 use Manticoresearch\Buddy\Core\Error\ManticoreSearchClientError;
-use Manticoresearch\Buddy\Core\Plugin\BaseHandlerWithClient;
+use Manticoresearch\Buddy\Core\Plugin\BaseHandler;
 use Manticoresearch\Buddy\Core\Task\Column;
 use Manticoresearch\Buddy\Core\Task\Task;
 use Manticoresearch\Buddy\Core\Task\TaskResult;
 use RuntimeException;
 
-final class Handler extends BaseHandlerWithClient
+final class Handler extends BaseHandler
 {
 	/**
 	 * Initialize the executor
@@ -48,11 +48,11 @@ final class Handler extends BaseHandlerWithClient
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				return $this->indexer_show_status();
 			}
-			if(str_starts_with($this->payload->path, 'indexer nodeid')) {
-					return $this->get_node_id();
+			if (str_starts_with($this->payload->path, 'indexer nodeid')) {
+				return $this->get_node_id();
 			}
-			if(str_starts_with($this->payload->path, 'show unattached')) {
-					return $this->show_unattached();
+			if (str_starts_with($this->payload->path, 'show unattached')) {
+				return $this->show_unattached();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
 		};
@@ -66,7 +66,7 @@ final class Handler extends BaseHandlerWithClient
 	 */
 	public function getProps(): array
 	{
-		return ['manticoreClient'];
+		return [];
 	}
 
 	/**
@@ -74,7 +74,7 @@ final class Handler extends BaseHandlerWithClient
 	 */
 	protected function get_node_id(): ?TaskResult
 	{
-		if(!is_file('/etc/manticoresearch/node-id')) {
+		if (!is_file('/etc/manticoresearch/node-id')) {
 			return TaskResult::withError('no node id file');
 		}
 		return TaskResult::withRow(
@@ -214,29 +214,36 @@ final class Handler extends BaseHandlerWithClient
 	protected function show_unattached(): TaskResult
 	{
 		$parts = explode(' ', $this->payload->path);
-
-
-		$response = $this->manticoreClient->sendRequest('SHOW SETTINGS');
-
-
-		file_put_contents(sys_get_temp_dir().'/debug.txt',json_encode($response->getBody()),FILE_APPEND);
-
-
 		$index_name = $parts[2] ?? null;
-		if ($index_name === null || count($parts) > 3) {
+		if (count($parts) > 3) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
-		if ($index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
+		if ($index_name !== null && $index_name !== preg_replace("/[^a-zA-Z0-9" . preg_quote('_-') . "]+/", "", $index_name)) {
 			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
 		}
 
-		$rows=[];
+		$index_name = !isset($index_name) ? '*.new.spa' : $index_name . '*.new.spa';
 
-		$rows[] = [
-			'index' => 'index',
-			'filename' => '',
-			'timestamp' => ''
-		];
+		$files = glob('/var/lib/manticore/data/' . $index_name);
+		$rows = [];
+		if (!empty($files)) {
+
+
+
+			file_put_contents(sys_get_temp_dir().'/debug.txt',json_encode(
+				$files
+			),FILE_APPEND);
+
+
+
+			$rows[] = [
+				'index' => 'index',
+				'filename' => '',
+				'timestamp' => ''
+			];
+
+		}
+
 
 		return TaskResult::withData(
 			$rows
