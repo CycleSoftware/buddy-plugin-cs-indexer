@@ -217,7 +217,7 @@ final class Handler extends BaseHandler
 
 		file_put_contents(
 			sys_get_temp_dir().'/debug.json',
-			json_encode($index_name),
+			json_encode([$index_name,$parts]),
 			FILE_APPEND
 		);
 
