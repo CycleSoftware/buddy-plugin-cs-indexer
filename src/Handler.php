@@ -51,10 +51,7 @@ final class Handler extends BaseHandler
 			if (str_starts_with($this->payload->path, 'indexer nodeid')) {
 				return $this->get_node_id();
 			}
-
-			file_put_contents(sys_get_temp_dir().'/daan.txt',$this->payload->path.PHP_EOL,FILE_APPEND);
-
-			if (str_starts_with($this->payload->path, 'show unattached indexes')) {
+			if ($this->payload->path === 'show unattached indexes') {
 				return $this->show_unattached_indexes();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
@@ -214,17 +211,12 @@ final class Handler extends BaseHandler
 	protected function show_unattached_indexes(): TaskResult
 	{
 		$parts = explode(' ', $this->payload->path);
-		$index_name = $parts[3] ?? null;
-		if (count($parts) > 3 || $index_name === null) {
+
+		if (count($parts) > 3) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
-		$index_name = trim($index_name ?? '', "'");
-		if ( $index_name !== preg_replace("/[^a-zA-Z0-9*" . preg_quote('_-') . "]+/", "", $index_name)) {
-			return TaskResult::withError('"' . $index_name . '" is not a valid index name');
-		}
-		$index_name = str_replace('%','*', $index_name );
 		$base_dir = '/var/lib/manticore/data';
-		$files = glob("{$base_dir}/{$index_name}.spa");
+		$files = glob("{$base_dir}/*.spa");
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
