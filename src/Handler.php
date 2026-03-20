@@ -148,6 +148,16 @@ final class Handler extends BaseHandler
 		// "show indexer status"
 		exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
 		$rows = [];
+
+
+		@file_put_contents(
+			sys_get_temp_dir() . "/indexer_buddy_error.log",
+			date('Y-m-d H:i:s') . ' - false content - ' . json_encode($output) . \PHP_EOL,
+			FILE_APPEND
+		);
+
+
+
 		foreach ($output as $line) {
 			if (!str_contains($line, ' > ')) {
 				continue;
