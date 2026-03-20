@@ -53,7 +53,7 @@ final class Payload extends BasePayload
 		if (str_starts_with($payload, 'indexer nodeid')) {
 			return true;
 		}
-		if (str_starts_with($payload, 'show unattached like')) {
+		if (str_starts_with($payload, 'show unattached indexes')) {
 			return true;
 		}
 		return false;

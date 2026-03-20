@@ -51,8 +51,11 @@ final class Handler extends BaseHandler
 			if (str_starts_with($this->payload->path, 'indexer nodeid')) {
 				return $this->get_node_id();
 			}
-			if (str_starts_with($this->payload->path, 'show unattached like')) {
-				return $this->show_unattached_like();
+
+			file_put_contents(sys_get_temp_dir().'/daan.txt',$this->payload->path.PHP_EOL,FILE_APPEND);
+
+			if (str_starts_with($this->payload->path, 'show unattached indexes')) {
+				return $this->show_unattached_indexes();
 			}
 			return TaskResult::withError('unknown request: ' . $this->payload->path);
 		};
@@ -208,11 +211,11 @@ final class Handler extends BaseHandler
 	/**
 	 * @return TaskResult
 	 */
-	protected function show_unattached_like(): TaskResult
+	protected function show_unattached_indexes(): TaskResult
 	{
 		$parts = explode(' ', $this->payload->path);
 		$index_name = $parts[3] ?? null;
-		if (count($parts) > 4 || $index_name === null) {
+		if (count($parts) > 3 || $index_name === null) {
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
 		$index_name = trim($index_name ?? '', "'");
