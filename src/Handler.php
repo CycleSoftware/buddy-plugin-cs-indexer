@@ -48,7 +48,7 @@ final class Handler extends BaseHandler
 			if ($this->payload->path === 'show indexer status' || $this->payload->path === 'indexer status') {
 				return $this->indexer_show_status();
 			}
-			if (str_starts_with($this->payload->path, 'indexer nodeid')) {
+			if ($this->payload->path === 'indexer nodeid') {
 				return $this->get_node_id();
 			}
 			if ($this->payload->path === 'show unattached indexes') {
