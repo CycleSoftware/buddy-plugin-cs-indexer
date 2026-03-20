@@ -149,25 +149,15 @@ final class Handler extends BaseHandler
 		exec('ps -eo pid,cmd ww | grep -e \'indexer --rotate\'', $output, $result);
 		$rows = [];
 
-
-		@file_put_contents(
-			sys_get_temp_dir() . "/indexer_buddy_error.log",
-			date('Y-m-d H:i:s') . ' - false content - ' . json_encode($output) . \PHP_EOL,
-			FILE_APPEND
-		);
-
-
-
 		foreach ($output as $line) {
-			if (!str_contains($line, ' > ')) {
+			if (!str_contains($line, 'indexer --rotate')) {
 				continue;
 			}
 			$parts = preg_split('/\s+/', trim($line), 2);
 
-
 			@file_put_contents(
 				sys_get_temp_dir() . "/indexer_buddy_error.log",
-				date('Y-m-d H:i:s') . ' - false content - ' . json_encode([$line,$parts]) . \PHP_EOL,
+				date('Y-m-d H:i:s') . json_encode([$line,$parts]) . \PHP_EOL,
 				FILE_APPEND
 			);
 
