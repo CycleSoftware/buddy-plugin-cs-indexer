@@ -153,6 +153,14 @@ final class Handler extends BaseHandler
 				continue;
 			}
 			$parts = preg_split('/\s+/', trim($line), 2);
+
+
+			@file_put_contents(
+				sys_get_temp_dir() . "/indexer_buddy_error.log",
+				date('Y-m-d H:i:s') . ' - false content - ' . json_encode([$line,$parts]) . \PHP_EOL,
+				FILE_APPEND
+			);
+
 			if ($parts === false) {
 				continue;
 			}
