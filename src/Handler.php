@@ -216,10 +216,13 @@ final class Handler extends BaseHandler
 			return TaskResult::withError($this->payload->path . ' is not a valid index command');
 		}
 		$base_dir = '/var/lib/manticore/data';
-		$files = glob("{$base_dir}/*new.spa");
+		$files = glob("{$base_dir}/*spa");
 		$rows = [];
 		if (!empty($files)) {
 			foreach ($files as $file) {
+				if (str_starts_with(basename($file), 'rt_')) {
+					continue;
+				}
 				$filename = FilenameSanitize::of(pathinfo($file, PATHINFO_FILENAME))->get();
 				if(str_contains($filename,'.')) {
 					[$filename,] = explode('.',$filename);
