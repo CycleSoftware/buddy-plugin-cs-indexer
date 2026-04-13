@@ -19,6 +19,23 @@ indexer rotate index_name
 indexer status
 ``
 
+``
+show indexer status
+``
+
+``
+indexer nodeid
+``
+
+``
+show unattached indexes
+``
+
+
+## Requirements
+``
+manticore-extra needs to be installed as it is needed bij manticore-executor with is used by manticore-buddy
+``
 
 ## How to start
 
